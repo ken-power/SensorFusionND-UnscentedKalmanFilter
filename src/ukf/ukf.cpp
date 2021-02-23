@@ -203,40 +203,11 @@ void UKF::Prediction(double delta_t)
     PredictSigmaPoints(&Xsig_pred_, delta_t, Xsig_aug);
 
     // Predicted Mean and covariance
+    PredictMeanAndCovariance();
 
-    // set weights
-    double weight_0 = lambda_ / (lambda_ + n_aug_);
-    weights_(0) = weight_0;
-    for(int i = 1; i < 2 * n_aug_ + 1; i++)
-    { //2n+1 weights
-        double weight = 0.5 / (n_aug_ + lambda_);
-        weights_(i) = weight;
-    }
-    //predicted state mean
-    x_.fill(0.0);
-    for(int i = 0; i < 2 * n_aug_ + 1; i++)
-    { //iterate over sigma points
-        x_ = x_ + weights_(i) * Xsig_pred_.col(i);
-    }
-
-    //predicted state covariance matrix
-    P_.fill(0.0);
-    for(int i = 0; i < 2 * n_aug_ + 1; i++)
-    { //iterate over sigma points
-
-        // state difference
-        VectorXd x_diff = Xsig_pred_.col(i) - x_;
-        //angle normalization
-        if(x_diff(3) > M_PI)
-            x_diff(3) -= 2. * M_PI;
-        if(x_diff(3) < -M_PI)
-            x_diff(3) += 2. * M_PI;
-
-        P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
-    }
 }
 
-void UKF::PredictSigmaPoints(Eigen::MatrixXd *Xsig_out, double delta_t, const MatrixXd & Xsig_aug)
+void UKF::PredictSigmaPoints(Eigen::MatrixXd *Xsig_pred, double delta_t, const MatrixXd & Xsig_aug)
 {
     for(int i = 0; i < 2 * n_aug_ + 1; i++)
     {
@@ -283,7 +254,40 @@ void UKF::PredictSigmaPoints(Eigen::MatrixXd *Xsig_out, double delta_t, const Ma
         Xsig_pred_(4, i) = yawd_p;
     }
 
-    *Xsig_out = Xsig_pred_;
+    *Xsig_pred = Xsig_pred_;
+}
+
+void UKF::PredictMeanAndCovariance()
+{// set weights
+    double weight_0 = lambda_ / (lambda_ + n_aug_);
+    weights_(0) = weight_0;
+    for(int i = 1; i < 2 * n_aug_ + 1; i++)
+    { //2n+1 weights
+        double weight = 0.5 / (n_aug_ + lambda_);
+        weights_(i) = weight;
+    }
+    //predicted state mean
+    x_.fill(0.0);
+    for(int i = 0; i < 2 * n_aug_ + 1; i++)
+    { //iterate over sigma points
+        x_ = x_ + weights_(i) * Xsig_pred_.col(i);
+    }
+
+    //predicted state covariance matrix
+    P_.fill(0.0);
+    for(int i = 0; i < 2 * n_aug_ + 1; i++)
+    { //iterate over sigma points
+
+        // state difference
+        VectorXd x_diff = Xsig_pred_.col(i) - x_;
+        //angle normalization
+        if(x_diff(3) > M_PI)
+            x_diff(3) -= 2. * M_PI;
+        if(x_diff(3) < -M_PI)
+            x_diff(3) += 2. * M_PI;
+
+        P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
+    }
 }
 
 void UKF::UpdateLidar(const MeasurementPackage& measurement_package)

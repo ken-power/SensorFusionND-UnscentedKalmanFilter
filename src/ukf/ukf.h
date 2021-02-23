@@ -96,7 +96,10 @@ public:
     // Sigma point spreading parameter
     double lambda_;
 
-    void PredictSigmaPoints(Eigen::MatrixXd *Xsig_out, double delta_t, const Eigen::MatrixXd & Xsig_aug);
+private:
+    void PredictSigmaPoints(Eigen::MatrixXd *Xsig_pred, double delta_t, const Eigen::MatrixXd & Xsig_aug);
+
+    void PredictMeanAndCovariance();
 };
 
 #endif  // UKF_H
