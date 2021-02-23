@@ -16,7 +16,7 @@ The following animated GIF demonstrates the highway simulation after implementin
 
 ![](results/UKF_SensorFusion_RMSE.gif)
 
-The above GIF is just an extract of a few seconds. [This MP4 file](results/UKF_SensorFusion_RMSE.mp4) demonstrates the full-length execution of the program.
+The above GIF is an extract of a few seconds. [This MP4 file](results/UKF_SensorFusion_RMSE.mp4) demonstrates the full 30 seconds execution of the program.
 
 
 # Accuracy
