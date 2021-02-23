@@ -78,6 +78,122 @@ By the time 3 seconds have passed, all of the RMSE values have exceeded their th
 
 Lidar alone performs much better than Radar alone. `Vx` is consistently above it's RMSE threshold. All of the other RMSE values are below their respective threshold values. However, the performance of Lidar alone is still not as good as both sensors together. 
 
+# Code for the Unscented Kalman Filter
+
+The Unscented Kalman Filter is implemented in the class `UKF`. The header file for `UKF` is [ukf.h](src/ukf/ukf.h). The following extract shows the public interface of the `UKF` class:
+
+```c++
+class UKF
+{
+public:
+    /**
+     * Constructor
+     */
+    UKF();
+
+    /**
+     * Destructor
+     */
+    virtual ~UKF();
+
+    /**
+     * ProcessMeasurement
+     * @param measurement_package The latest measurement data of either radar or laser
+     */
+    void ProcessMeasurement(MeasurementPackage measurement_package);
+
+    /**
+     * Prediction Predicts sigma points, the state, and the state covariance
+     * matrix
+     * @param delta_t Time between k and k+1 in s
+     */
+    void Prediction(double delta_t);
+
+    /**
+     * Updates the state and the state covariance matrix using a laser measurement
+     * @param measurement_package The measurement at k+1
+     */
+    void UpdateLidar(const MeasurementPackage & measurement_package);
+
+    /**
+     * Updates the state and the state covariance matrix using a radar measurement
+     * @param measurement_package The measurement at k+1
+     */
+    void UpdateRadar(const MeasurementPackage & measurement_package);
+
+    /**
+     *
+     * @return state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
+     */
+    const Eigen::VectorXd & State() const;
+
+    ...
+}
+```
+
+Internally, the `UKF` implementation uses a number of private functions to help with the prediction workload:
+
+```c++
+...
+
+private:
+    Eigen::MatrixXd AugmentedSigmaPoints() const;
+
+    void PredictSigmaPoints(Eigen::MatrixXd *Xsig_pred, double delta_t, const Eigen::MatrixXd & Xsig_aug);
+
+    void PredictMeanAndCovariance();
+
+...
+
+```
+
+The `main()` function in [main.cpp](src/main.cpp) constructs the highway and launches the viewer.
+
+```c++
+int main()
+{
+    pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+    viewer->setBackgroundColor(0, 0, 0);
+    
+    // set camera position and angle
+    viewer->initCameraParameters();
+    float x_pos = 0;
+    viewer->setCameraPosition(x_pos - 26, 0, 15.0, x_pos + 25, 0, 0, 0, 0, 1);
+    
+    Highway highway(viewer);
+    
+    //initHighway(viewer);
+    
+    int frame_per_sec = 30;
+    int sec_interval = 10;
+    int frame_count = 0;
+    int time_us = 0;
+    
+    double ego_velocity = 25;
+    
+    while(frame_count < (frame_per_sec * sec_interval))
+    {
+        viewer->removeAllPointClouds();
+        viewer->removeAllShapes();
+        
+        //stepHighway(egoVelocity,time_us, frame_per_sec, viewer);
+        highway.StepHighway(ego_velocity, time_us, frame_per_sec, viewer);
+        viewer->spinOnce(1000 / frame_per_sec);
+        frame_count++;
+        time_us = 1000000 * frame_count / frame_per_sec;
+    }
+}
+```
+
+The [`Highway` constructor](src/ukf/highway.h) creates the highway, including the simulated cars. The Highway constructor also creates an Unscented Kalman Filter for each car, e.g.,:
+
+```c++
+    UKF ukf1;
+    car1.setUKF(ukf1);
+```
+
+The call to the `highway.StepHighway()` function
+
 # Building and running the project
 The main program can be built and ran by doing the following from the project top directory.
 
