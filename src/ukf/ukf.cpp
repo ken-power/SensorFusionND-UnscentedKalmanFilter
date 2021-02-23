@@ -204,7 +204,6 @@ void UKF::Prediction(double delta_t)
 
     // Predicted Mean and covariance
     PredictMeanAndCovariance();
-
 }
 
 void UKF::PredictSigmaPoints(Eigen::MatrixXd *Xsig_pred, double delta_t, const MatrixXd & Xsig_aug)
@@ -328,10 +327,8 @@ void UKF::UpdateLidar(const MeasurementPackage& measurement_package)
         VectorXd z_diff = Zsig.col(i) - z_pred;
 
         // angle normalization
-        while(z_diff(1) > M_PI)
-            z_diff(1) -= 2. * M_PI;
-        while(z_diff(1) < -M_PI)
-            z_diff(1) += 2. * M_PI;
+        while(z_diff(1) > M_PI) z_diff(1) -= 2. * M_PI;
+        while(z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
 
         S = S + weights_(i) * z_diff * z_diff.transpose();
     }
@@ -370,9 +367,6 @@ void UKF::UpdateLidar(const MeasurementPackage& measurement_package)
     // update state mean and covariance matrix
     x_ = x_ + K * z_diff;
     P_ = P_ - K * S * K.transpose();
-
-    double NIS_laser_ = z_diff.transpose() * S.inverse() * z_diff;
-
 }
 
 void UKF::UpdateRadar(const MeasurementPackage& measurement_package)
@@ -476,8 +470,5 @@ void UKF::UpdateRadar(const MeasurementPackage& measurement_package)
     // update state mean and covariance matrix
     x_ = x_ + K * z_diff;
     P_ = P_ - K * S * K.transpose();
-
-    // Update Radar NIS
-    double NIS_radar_ = z_diff.transpose() * S.inverse() * z_diff;
 }
 

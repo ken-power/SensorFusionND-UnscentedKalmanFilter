@@ -138,15 +138,12 @@ public:
         viewer->addText("Accuracy - RMSE:", 30, 300, 20, 1, 1, 1, "rmse");
         VectorXd rmse = tools_.CalculateRMSE(tools_.estimations, tools_.ground_truth);
 
-        cout << "RMSE: " << rmse << endl;
-
         viewer->addText(" X: " + std::to_string(rmse[0]), 30, 275, 20, 1, 1, 1, "rmse_x");
         viewer->addText(" Y: " + std::to_string(rmse[1]), 30, 250, 20, 1, 1, 1, "rmse_y");
         viewer->addText("Vx: " + std::to_string(rmse[2]), 30, 225, 20, 1, 1, 1, "rmse_vx");
         viewer->addText("Vy: " + std::to_string(rmse[3]), 30, 200, 20, 1, 1, 1, "rmse_vy");
 
-        cout << "Running stats: " << endl;
-        cout << "X = " << rmse[0] << "\tY = " << rmse[1] << "\tVx = " << rmse[2] << "\tVy = " << rmse[3] << endl;
+        cout << "Running stats: " << "X = " << rmse[0] << "\tY = " << rmse[1] << "\tVx = " << rmse[2] << "\tVy = " << rmse[3] << endl;
 
         WriteToFile(rmse);
 
