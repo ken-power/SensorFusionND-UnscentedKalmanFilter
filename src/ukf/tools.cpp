@@ -6,10 +6,10 @@ using namespace std;
 using std::vector;
 
 Tools::Tools()
-{}
+= default;
 
 Tools::~Tools()
-{}
+= default;
 
 double Tools::noise(double stddev, long long seedNum)
 {
@@ -93,9 +93,12 @@ rmarker Tools::radarSense(Car & car,
 void Tools::ukfResults(Car car, pcl::visualization::PCLVisualizer::Ptr & viewer, double time, int steps)
 {
     UKF ukf = car.ukf;
-    viewer->addSphere(pcl::PointXYZ(ukf.x_[0], ukf.x_[1], 3.5), 0.5, 0, 1, 0, car.name + "_ukf");
-    viewer->addArrow(pcl::PointXYZ(ukf.x_[0], ukf.x_[1], 3.5),
-                     pcl::PointXYZ(ukf.x_[0] + ukf.x_[2] * cos(ukf.x_[3]), ukf.x_[1] + ukf.x_[2] * sin(ukf.x_[3]), 3.5),
+    viewer->addSphere(pcl::PointXYZ(ukf.State()[0], ukf.State()[1], 3.5), 0.5, 0, 1, 0, car.name + "_ukf");
+    viewer->addArrow(pcl::PointXYZ(ukf.State()[0], ukf.State()[1], 3.5),
+                     pcl::PointXYZ(ukf.State()[0] + ukf.State()[2] * cos(ukf.State()[3]),
+                                   ukf.State()[1] +
+                                   ukf.State()[2] * sin(
+                                           ukf.State()[3]), 3.5),
                      0,
                      1,
                      0,
@@ -107,7 +110,7 @@ void Tools::ukfResults(Car car, pcl::visualization::PCLVisualizer::Ptr & viewer,
         while(ct <= time)
         {
             ukf.Prediction(dt);
-            viewer->addSphere(pcl::PointXYZ(ukf.x_[0], ukf.x_[1], 3.5),
+            viewer->addSphere(pcl::PointXYZ(ukf.State()[0], ukf.State()[1], 3.5),
                               0.5,
                               0,
                               1,
@@ -116,7 +119,7 @@ void Tools::ukfResults(Car car, pcl::visualization::PCLVisualizer::Ptr & viewer,
             viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY,
                                                 1.0 - 0.8 * (ct / time),
                                                 car.name + "_ukf" + std::to_string(ct));
-            //viewer->addArrow(pcl::PointXYZ(ukf.x_[0], ukf.x_[1],3.5), pcl::PointXYZ(ukf.x_[0]+ukf.x_[2]*cos(ukf.x_[3]),ukf.x_[1]+ukf.x_[2]*sin(ukf.x_[3]),3.5), 0, 1, 0, car.name+"_ukf_vel"+std::to_string(ct));
+            //viewer->addArrow(pcl::PointXYZ(ukf.getX()[0], ukf.getX()[1],3.5), pcl::PointXYZ(ukf.getX()[0]+ukf.getX()[2]*cos(ukf.getX()[3]),ukf.getX()[1]+ukf.getX()[2]*sin(ukf.getX()[3]),3.5), 0, 1, 0, car.name+"_ukf_vel"+std::to_string(ct));
             //viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, 1.0-0.8*(ct/time), car.name+"_ukf_vel"+std::to_string(ct));
             ct += dt;
         }

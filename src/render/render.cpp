@@ -125,7 +125,12 @@ void RenderRays(pcl::visualization::PCLVisualizer::Ptr & viewer,
 
     for(pcl::PointXYZ point : cloud->points)
     {
-        viewer->addLine(pcl::PointXYZ(origin.x, origin.y, origin.z), point, 1, 0, 0, "ray" + std::to_string(count_rays_));
+        viewer->addLine(pcl::PointXYZ(origin.x, origin.y, origin.z),
+                        point,
+                        1,
+                        0,
+                        0,
+                        "ray" + std::to_string(count_rays_));
         count_rays_++;
     }
 }

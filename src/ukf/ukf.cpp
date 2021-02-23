@@ -148,7 +148,7 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_package)
         return;
     } // end of if (!is_initialized_)
 
-    float dt = (measurement_package.timestamp_ - time_us_) / 1000000.0; // dt - expressed in seconds
+    double dt = (measurement_package.timestamp_ - time_us_) / 1000000.0; // dt - expressed in seconds
     time_us_ = measurement_package.timestamp_;
 
     Prediction(dt);
@@ -293,7 +293,7 @@ void UKF::PredictMeanAndCovariance()
     }
 }
 
-void UKF::UpdateLidar(const MeasurementPackage& measurement_package)
+void UKF::UpdateLidar(const MeasurementPackage & measurement_package)
 {
     cout << "Updating Lidar" << endl;
 
@@ -373,7 +373,7 @@ void UKF::UpdateLidar(const MeasurementPackage& measurement_package)
     P_ = P_ - K * S * K.transpose();
 }
 
-void UKF::UpdateRadar(const MeasurementPackage& measurement_package)
+void UKF::UpdateRadar(const MeasurementPackage & measurement_package)
 {
     cout << "Updating Radar" << endl;
 
@@ -474,5 +474,14 @@ void UKF::UpdateRadar(const MeasurementPackage& measurement_package)
     // update state mean and covariance matrix
     x_ = x_ + K * z_diff;
     P_ = P_ - K * S * K.transpose();
+}
+
+/**
+ *
+ * @return state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
+ */
+const Eigen::VectorXd & UKF::State() const
+{
+    return x_;
 }
 

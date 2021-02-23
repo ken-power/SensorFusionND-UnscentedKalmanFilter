@@ -126,11 +126,11 @@ public:
                 tools_.radarSense(traffic_[i], ego_car_, viewer, timestamp, visualize_radar_);
                 tools_.ukfResults(traffic_[i], viewer, projected_time_, projected_steps_);
                 VectorXd estimate(4);
-                double v = traffic_[i].ukf.x_(2);
-                double yaw = traffic_[i].ukf.x_(3);
+                double v = traffic_[i].ukf.State()(2);
+                double yaw = traffic_[i].ukf.State()(3);
                 double v1 = cos(yaw) * v;
                 double v2 = sin(yaw) * v;
-                estimate << traffic_[i].ukf.x_[0], traffic_[i].ukf.x_[1], v1, v2;
+                estimate << traffic_[i].ukf.State()[0], traffic_[i].ukf.State()[1], v1, v2;
                 tools_.estimations.push_back(estimate);
 
             }
@@ -143,7 +143,8 @@ public:
         viewer->addText("Vx: " + std::to_string(rmse[2]), 30, 225, 20, 1, 1, 1, "rmse_vx");
         viewer->addText("Vy: " + std::to_string(rmse[3]), 30, 200, 20, 1, 1, 1, "rmse_vy");
 
-        cout << "Running stats: " << "X = " << rmse[0] << "\tY = " << rmse[1] << "\tVx = " << rmse[2] << "\tVy = " << rmse[3] << endl;
+        cout << "Running stats: " << "X = " << rmse[0] << "\tY = " << rmse[1] << "\tVx = " << rmse[2] << "\tVy = "
+             << rmse[3] << endl;
 
         WriteToFile(rmse);
 
@@ -218,6 +219,7 @@ private:
         const string separator = ", ";
         ofstream results_file;
         results_file.open(filename, ios_base::app);
-        results_file << rmse_data[0] << separator << rmse_data[1] << separator << rmse_data[2] << separator << rmse_data[3] << endl;
+        results_file << rmse_data[0] << separator << rmse_data[1] << separator << rmse_data[2] << separator
+                     << rmse_data[3] << endl;
     }
 };
