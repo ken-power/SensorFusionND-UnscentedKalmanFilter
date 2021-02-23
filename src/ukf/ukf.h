@@ -34,13 +34,13 @@ public:
      * Updates the state and the state covariance matrix using a laser measurement
      * @param measurement_package The measurement at k+1
      */
-    void UpdateLidar(MeasurementPackage measurement_package);
+    void UpdateLidar(const MeasurementPackage& measurement_package);
 
     /**
      * Updates the state and the state covariance matrix using a radar measurement
      * @param measurement_package The measurement at k+1
      */
-    void UpdateRadar(MeasurementPackage measurement_package);
+    void UpdateRadar(const MeasurementPackage& measurement_package);
 
     // initially set to false, set to true in first call of ProcessMeasurement
     bool is_initialized_;
@@ -95,6 +95,8 @@ public:
 
     // Sigma point spreading parameter
     double lambda_;
+
+    void PredictSigmaPoints(Eigen::MatrixXd *Xsig_out, double delta_t, const Eigen::MatrixXd & Xsig_aug);
 };
 
 #endif  // UKF_H
