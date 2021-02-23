@@ -18,7 +18,8 @@ UKF::UKF()
     // RADAR measurements will be ignored if this is false
     use_radar_ = true;
 
-//    is_initialized_ = true;
+    // initially set to false, set to true in first call of ProcessMeasurement
+    is_initialized_ = false;
 
     // initial state vector
     x_ = VectorXd(5);
@@ -32,7 +33,8 @@ UKF::UKF()
     // Process noise standard deviation yaw acceleration in rad/s^2
     std_yawdd_ = 1.5;
 
-//    time_us_ = 0;
+    // time when the state is true, in us
+    time_us_ = 0;
 
     /***************************************************************************
      * DO NOT MODIFY measurement noise values below.
