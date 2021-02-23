@@ -1,6 +1,5 @@
 // Explore self-driving car sensors by creating a 3D highway environment using PCL
 
-//#include "render/render.h"
 #include "ukf/highway.h"
 
 int main()
