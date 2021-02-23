@@ -2,6 +2,8 @@
 
 This project is the final project in [Udacity](https://www.udacity.com)'s [sensor fusion nanodegree](https://www.udacity.com/course/sensor-fusion-engineer-nanodegree--nd313). This project implements an Unscented Kalman Filter to estimate the state of multiple cars on a highway using noisy lidar and radar measurements. The project obtains RMSE values that are lower than the tolerance outlined in the project specification below. 
 
+![](results/UKF_Snapshot.png)
+
 # Highway Demo
 
 ### Before
