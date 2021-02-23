@@ -1,4 +1,4 @@
-# Sensor Fusion Unscented Kalman Filter Highway Project
+# Unscented Kalman Filter
 
 This project is the final project in [Udacity](https://www.udacity.com)'s [sensor fusion nanodegree](https://www.udacity.com/course/sensor-fusion-engineer-nanodegree--nd313). This project implements an Unscented Kalman Filter to estimate the state of multiple cars on a highway using noisy lidar and radar measurements. The project obtains RMSE values that are lower than the tolerance outlined in the project specification below. 
 
@@ -43,7 +43,7 @@ The following graph shows the output coordinate **before implementing the UKF fu
 
 ![](results/RMSE_Before.png)
 
-The following graph shows **the effect of implementing the UKF functions**: the output coordinate stay well below the RMSE values after 1 second.
+The following graph shows **the effect of implementing the UKF functions**: the output coordinates stay well below the RMSE values after 1 second.
 
 ![](results/RMSE_SensorFusion.png)
 
