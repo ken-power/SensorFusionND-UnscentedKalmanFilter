@@ -166,8 +166,19 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_package)
 void UKF::Prediction(double delta_t)
 {
     cout << "Prediction: delta_t = " << delta_t << endl;
+    MatrixXd Xsig_aug = AugmentedSigmaPoints();
 
-    // create augmented mean vector
+    // Predict the sigma points
+    // create matrix with predicted sigma points as columns
+    Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
+    PredictSigmaPoints(&Xsig_pred_, delta_t, Xsig_aug);
+
+    // Predicted Mean and covariance
+    PredictMeanAndCovariance();
+}
+
+MatrixXd UKF::AugmentedSigmaPoints() const
+{// create augmented mean vector
     VectorXd x_aug = VectorXd(7);
 
     // create augmented state covariance
@@ -196,14 +207,7 @@ void UKF::Prediction(double delta_t)
         Xsig_aug.col(i + 1) = x_aug + sqrt(lambda_ + n_aug_) * L.col(i);
         Xsig_aug.col(i + 1 + n_aug_) = x_aug - sqrt(lambda_ + n_aug_) * L.col(i);
     }
-
-    // Predict the sigma points
-    // create matrix with predicted sigma points as columns
-    Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
-    PredictSigmaPoints(&Xsig_pred_, delta_t, Xsig_aug);
-
-    // Predicted Mean and covariance
-    PredictMeanAndCovariance();
+    return Xsig_aug;
 }
 
 void UKF::PredictSigmaPoints(Eigen::MatrixXd *Xsig_pred, double delta_t, const MatrixXd & Xsig_aug)

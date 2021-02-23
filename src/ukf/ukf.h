@@ -97,6 +97,8 @@ public:
     double lambda_;
 
 private:
+    Eigen::MatrixXd AugmentedSigmaPoints() const;
+
     void PredictSigmaPoints(Eigen::MatrixXd *Xsig_pred, double delta_t, const Eigen::MatrixXd & Xsig_aug);
 
     void PredictMeanAndCovariance();
