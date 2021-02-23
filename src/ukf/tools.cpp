@@ -76,13 +76,13 @@ rmarker Tools::radarSense(Car & car,
                          car.name + "_rho_dot");
     }
 
-    MeasurementPackage meas_package;
-    meas_package.sensor_type_ = MeasurementPackage::RADAR;
-    meas_package.raw_measurements_ = VectorXd(3);
-    meas_package.raw_measurements_ << marker.rho, marker.phi, marker.rho_dot;
-    meas_package.timestamp_ = timestamp;
+    MeasurementPackage measurement_package;
+    measurement_package.sensor_type_ = MeasurementPackage::RADAR;
+    measurement_package.raw_measurements_ = VectorXd(3);
+    measurement_package.raw_measurements_ << marker.rho, marker.phi, marker.rho_dot;
+    measurement_package.timestamp_ = timestamp;
 
-    car.ukf.ProcessMeasurement(meas_package);
+    car.ukf.ProcessMeasurement(measurement_package);
 
     return marker;
 }
